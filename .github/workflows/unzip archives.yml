@@ -1,5 +1,4 @@
-name: unzipp
-uses: postleo/unzipp@v1.0.1
+name: unzip archives
 
 on:
   workflow_dispatch:
