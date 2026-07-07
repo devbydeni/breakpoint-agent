@@ -1,0 +1,40 @@
+name: unzipp
+uses: postleo/unzipp@v1.0.1
+
+on:
+  workflow_dispatch:
+    inputs:
+      pattern:
+        description: "Glob for the archives to extract"
+        required: false
+        default: "**/*.zip"
+      delete-zip:
+        description: "Delete each .zip after it is extracted"
+        type: boolean
+        default: true
+      commit:
+        description: "Commit the extracted files back to the branch"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write # required so the action can commit extracted files back
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unzip archives
+        id: unzip
+        uses: postleo/unzipp@v1
+        with:
+          pattern: ${{ inputs.pattern }}
+          delete-zip: ${{ inputs.delete-zip }}
+          commit: ${{ inputs.commit }}
+          commit-message: "chore: unzip archives [skip ci]"
+
+      - name: Summary
+        run: echo "Extracted ${{ steps.unzip.outputs.extracted-count }} archive(s)."
